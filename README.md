@@ -11,9 +11,17 @@
 
 ### Create private VPN server and connection
 
+```
  $> ./run.sh start
+```
+
+##### (Press CTRL-C to stop the connection)
 
 ### Delete VPN server
 
+```
  $> ./run.sh stop
+```
+
+##### Tested only on Linux Mint.
 
