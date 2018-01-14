@@ -1,3 +1,5 @@
+### NOTE: this solution does not provide a real security. Do not use it in any production system. 
+
 ### Prerequisites
 
 1. Existing Vultr account. VULTR_API_KEY must be in the environment.
