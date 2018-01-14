@@ -1,15 +1,15 @@
-### Steps
+### Prerequisites
+
+1. Existing Vultr account. VULTR_API_KEY must be in the environment.
+2. Install (terraform)[www.terraform.io/downloads.html].
+3. Install openvpn client.
 
 
-* start vultr openvpn server
+### Create private VPN server and connection
 
- $> ./vultr-vpn
+ $> ./run.sh start
 
-* copy client.vpn to local
+### Delete VPN server
 
- $> scp root@${ip}:/root/client.ovpn .
-pass: ${pass}
+ $> ./run.sh stop
 
-* run local vpn client
-
- $> sudo openvpn --config client.ovpn

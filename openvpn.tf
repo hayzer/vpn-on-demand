@@ -1,4 +1,5 @@
 // Configure the Vultr provider.
+variable "vultr_public_key" {}
 
 // Find the OS ID for applications.
 data "vultr_os" "application" {
@@ -37,6 +38,12 @@ data "vultr_plan" "starter" {
   }
 }
 
+// Create SSH key
+resource "vultr_ssh_key" "popcorntime" {
+  name       = "popcorntime"
+  public_key = "${file("${var.vultr_public_key}")}"
+}
+
 // Create a Vultr virtual machine.
 resource "vultr_instance" "openvpn" {
   name           = "openvpn"
@@ -45,6 +52,7 @@ resource "vultr_instance" "openvpn" {
   plan_id        = "${data.vultr_plan.starter.id}"
   os_id          = "${data.vultr_os.application.id}"
   application_id = "${data.vultr_application.openvpn.id}"
+  ssh_key_ids    = ["${vultr_ssh_key.popcorntime.id}"]
  
   provisioner "file" {
     source = "build-client.sh"
@@ -60,8 +68,4 @@ resource "vultr_instance" "openvpn" {
 
 output "ip" {
   value = ["${vultr_instance.openvpn.ipv4_address}"]
-}
-
-output "pass" {
-  value = ["${vultr_instance.openvpn.default_password}"]
 }
