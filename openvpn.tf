@@ -1,7 +1,6 @@
-// Configure the Vultr provider.
 variable "vultr_public_key" {}
+variable "vultr_set_region" {}
 
-// Find the OS ID for applications.
 data "vultr_os" "application" {
   filter {
     name   = "family"
@@ -9,7 +8,6 @@ data "vultr_os" "application" {
   }
 }
 
-// Find the application ID for OpenVPN.
 data "vultr_application" "openvpn" {
   filter {
     name   = "short_name"
@@ -17,15 +15,13 @@ data "vultr_application" "openvpn" {
   }
 }
 
-// Find the ID of the Silicon Valley region.
-data "vultr_region" "london" {
+data "vultr_region" "random_region" {
   filter {
     name   = "name"
-    values = ["London"]
+    values = ["${var.vultr_set_region}"]
   }
 }
 
-// Find the ID for a starter plan.
 data "vultr_plan" "starter" {
   filter {
     name   = "price_per_month"
@@ -38,7 +34,6 @@ data "vultr_plan" "starter" {
   }
 }
 
-// Create SSH key
 resource "vultr_ssh_key" "popcorntime" {
   name       = "popcorntime"
   public_key = "${file("${var.vultr_public_key}")}"
@@ -48,7 +43,7 @@ resource "vultr_ssh_key" "popcorntime" {
 resource "vultr_instance" "openvpn" {
   name           = "openvpn"
   hostname       = "openvpn"
-  region_id      = "${data.vultr_region.london.id}"
+  region_id      = "${data.vultr_region.random_region.id}"
   plan_id        = "${data.vultr_plan.starter.id}"
   os_id          = "${data.vultr_os.application.id}"
   application_id = "${data.vultr_application.openvpn.id}"
