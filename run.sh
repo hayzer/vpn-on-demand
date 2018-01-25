@@ -2,7 +2,7 @@
 
 VULTR_PUBLIC_KEY=${HOME}/.ssh/id_rsa.pub
 
-REGIONS="Frankfurt London Paris Singapore Dallas Miami Chicago"
+REGIONS="London Frankfurt"
 VULTR_REGION=$(echo ${REGIONS}|tr ' ' '\n'|shuf -n 1)
 
 case $1 in
