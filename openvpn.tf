@@ -37,6 +37,7 @@ data "vultr_plan" "starter" {
 resource "vultr_ssh_key" "popcorntime" {
   name       = "popcorntime"
   public_key = "${file("${var.vultr_public_key}")}"
+  //public_key = "${var.vultr_public_key}"
 }
 
 // Create a Vultr virtual machine.

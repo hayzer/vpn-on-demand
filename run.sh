@@ -2,11 +2,12 @@
 
 VULTR_PUBLIC_KEY=${HOME}/.ssh/id_rsa.pub
 
-REGIONS="London Frankfurt"
+REGIONS="Paris London Frankfurt"
 VULTR_REGION=$(echo ${REGIONS}|tr ' ' '\n'|shuf -n 1)
 
 case $1 in
     start)
+	old_ip="$(curl ifconfig.io)"
         terraform apply -auto-approve \
             -var vultr_public_key=${VULTR_PUBLIC_KEY} \
             -var vultr_set_region=${VULTR_REGION}
@@ -14,9 +15,12 @@ case $1 in
         ip="$(terraform output ip)"
 
         scp -o "StrictHostKeyChecking no" root@${ip}:/root/client.ovpn .
-        sudo openvpn --config ./client.ovpn
+        sudo openvpn --config ./client.ovpn --daemon myvpn
+	echo IP before ${old_ip}
+	echo IP after  $(curl -s ipconfig.io)
         ;;
     stop)
+	sudo pkill openvpn
         terraform destroy -force \
             -var vultr_public_key=${VULTR_PUBLIC_KEY} \
             -var vultr_set_region=${VULTR_REGION}
